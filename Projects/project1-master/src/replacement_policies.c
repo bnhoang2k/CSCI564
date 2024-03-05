@@ -22,85 +22,96 @@
 
 struct lru_node {
     uint32_t tag;
+    uint32_t counter;
     struct lru_node *next;
     struct lru_node *prev;
 };
+
+uint32_t i = 0;
+
+void print_data(struct lru_node **list, uint32_t sets) {
+    int i = 0;
+    while (i < sets) {
+        struct lru_node *current_head = list[i];
+        while (current_head->next != NULL) {
+            printf("%d ", current_head->tag);
+            current_head = current_head->next;
+        }
+        printf("\n");
+        i++;
+    }
+}
 
 uint32_t lru_eviction_index(struct replacement_policy *replacement_policy,
                             struct cache_system *cache_system, uint32_t set_idx)
 {
     // TODO return the index within the set that should be evicted.
     // We want to remove the last element in the linked list
-    struct lru_node *set_head = ((struct lru_node **)replacement_policy->data)[set_idx];
+    struct lru_node **set_heads = (struct lru_node **)replacement_policy->data;
+    struct lru_node *set_head = set_heads[set_idx];
     uint32_t eviction_index = 0;
+
     while (set_head->next != NULL) {
         set_head = set_head->next;
         eviction_index++;
     }
+
     return eviction_index;
 }
 
-void lru_cache_access(struct replacement_policy *replacement_policy,
-                      struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
-{
-    // TODO update the LRU replacement policy state given a new memory access
-    struct lru_node *set_head = ((struct lru_node **)replacement_policy->data)[set_idx];
+void lru_cache_access(struct replacement_policy *replacement_policy, struct cache_system *cache_system, uint32_t set_idx, uint32_t tag) {
 
-    // First, if the set is empty, we'll just add the tag to the set
-    if ((set_head->next == NULL) && (set_head->prev == NULL)) {
+    // Pointer to the head of the linked list
+    struct lru_node **set_heads = (struct lru_node **)replacement_policy->data;
+    struct lru_node *set_head = set_heads[set_idx];
+
+    // First, if the set is empty, we will just add the tag to the set
+    if ((set_head->next == NULL) && (set_head->prev)) {
         set_head->tag = tag;
+        return;
     }
-    else {
-        // Two scenarios occur: the tag is already in the set or it's not
-        // Our plan is to move recently used tags to the front of the linked list and delete the last tag
-        struct lru_node *temp = set_head;
-        bool tag_found = false;
-        while (temp->next != NULL) {
-            if (temp->tag == tag) {
-                tag_found = true;
-                break;
-            }
-            temp = temp->next;
+    // Otherwise, two scenarios occur: the tag is already in the set or it's not
+    // Our plan is to move recently used tags to the front of the linked list and delete the last tag
+    struct lru_node *current = set_head, *prev = NULL;
+    bool tag_found = false;
+    while (current->next != NULL) {
+        if (current->tag == tag) {
+            tag_found = true;
+            break;
         }
-        if (tag_found) {
-            struct lru_node *current = set_head;
-            while (current->next != NULL) {
-                if (current->tag == tag) {
-                    // In here, we'll have to account for the scenarios where the current node is either a) the head, b) the tail, or c) in the middle
-                    // Scenario A: The current node is the head
-                    if (current == set_head) {return;}
-                    // Scenario B: The current node is the tail
-                    else if (current->next == NULL) {
-                        current->prev->next = NULL;
-                        current->prev = NULL;
-                        current->next = set_head;
-                        set_head->prev = current;
-                        set_head = current;
-                        break;
-                    }
-                    // Scenario C: The current node is in the middle
-                    else {
-                        current->prev->next = current->next;
-                        current->next->prev = current->prev;
-                        current->prev = NULL;
-                        current->next = set_head;
-                        set_head->prev = current;
-                        set_head = current;
-                        break;
-                    } 
-                }
-                current = current->next;
-            }
+        prev = current;
+        current = current->next;
+    }
+
+    // If the tag is found, we will move it to the front of the linked list
+    // Three scenarios emerge: the tag is the head, the tag is the tail, or the tag is in the middle
+    if (tag_found) {
+        if (current == set_head) {return;}
+        if (current->next == NULL) {
+            prev->next = NULL;
+            current->next = set_head;
+            current->prev = NULL;
+            set_head->prev = current;
+            set_heads[set_idx] = current;
         }
         else {
-            // If the tag is not in the set, we'll add it to the front of the linked list
-            struct lru_node *new_node = malloc(sizeof(struct lru_node));
-            new_node->tag = tag;
-            new_node->next = set_head;
-            new_node->prev = NULL;
-            set_head->prev = new_node;
-            set_head = new_node;
+            prev->next = current->next;
+            current->next->prev = prev;
+            current->next = set_head;
+            current->prev = NULL;
+            set_head->prev = current;
+            set_heads[set_idx] = current;
         }
+    }
+    else {
+        // If the tag is not found, we will add it to the front of the linked list
+        struct lru_node *new_node = malloc(sizeof(struct lru_node));
+        new_node->tag = tag;
+        new_node->next = set_head;
+        new_node->prev = NULL;
+        set_head->prev = new_node;
+        set_heads[set_idx] = new_node;
+
     }
 }
 
@@ -124,11 +135,13 @@ struct replacement_policy *lru_replacement_policy_new(uint32_t sets, uint32_t as
     // Create an array of structs to store the linked list for each set
     // However, the array has to be a double pointer to be able to store the head of the linked lists.
     struct lru_node **lru_lists = calloc(sets, sizeof(struct lru_node*));
+    i = 0;
     for (int i = 0; i < sets; i++) {
         struct lru_node *head = malloc(sizeof(struct lru_node));
         head->tag = 0;
         head->next = NULL;
         head->prev = NULL;
+        head->counter = 0;
         lru_lists[i] = head;
     }
     lru_rp->data = lru_lists;

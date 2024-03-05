@@ -85,6 +85,8 @@ int main(int argc, char **argv)
     printf("OUTPUT HIT RATIO %.8f\n",
            (double)cache_system->stats.hits / cache_system->stats.accesses);
 
+    // print_data(replacement_policy->data, sets);
+
     // Clean everything up.
     cache_system_cleanup(cache_system);
     free(cache_system);
