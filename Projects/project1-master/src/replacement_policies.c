@@ -13,23 +13,32 @@
 //
 
 #include "replacement_policies.h"
+#include "time.h"
 
 // LRU Replacement Policy
 // ============================================================================
 // TODO feel free to create additional structs/enums as necessary
 
-void lru_cache_access(struct replacement_policy *replacement_policy,
-                      struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
-{
-    // TODO update the LRU replacement policy state given a new memory access
-}
+struct lru_cache_line {
+    uint32_t tag;
+    uint32_t lru_counter;
+};
 
 uint32_t lru_eviction_index(struct replacement_policy *replacement_policy,
                             struct cache_system *cache_system, uint32_t set_idx)
 {
     // TODO return the index within the set that should be evicted.
+    
+    
 
     return 0;
+}
+
+void lru_cache_access(struct replacement_policy *replacement_policy,
+                      struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
+{
+    // TODO update the LRU replacement policy state given a new memory access
+
 }
 
 void lru_replacement_policy_cleanup(struct replacement_policy *replacement_policy)
@@ -48,23 +57,25 @@ struct replacement_policy *lru_replacement_policy_new(uint32_t sets, uint32_t as
     // TODO allocate any additional memory to store metadata here and assign to
     // lru_rp->data.
 
+
+
     return lru_rp;
 }
 
 // RAND Replacement Policy
 // ============================================================================
-void rand_cache_access(struct replacement_policy *replacement_policy,
-                       struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
-{
-    // TODO update the RAND replacement policy state given a new memory access
-}
 
 uint32_t rand_eviction_index(struct replacement_policy *replacement_policy,
                              struct cache_system *cache_system, uint32_t set_idx)
 {
     // TODO return the index within the set that should be evicted.
-
     return 0;
+}
+
+void rand_cache_access(struct replacement_policy *replacement_policy,
+                       struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
+{
+    // TODO update the RAND replacement policy state given a new memory access
 }
 
 void rand_replacement_policy_cleanup(struct replacement_policy *replacement_policy)

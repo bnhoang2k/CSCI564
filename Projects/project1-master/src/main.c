@@ -28,8 +28,11 @@ int main(int argc, char **argv)
     size_t associativity = strtol(argv[4], &endptr, 10);
 
     // TODO: calculate the line size and number of sets.
-    int line_size = 0;
-    int sets = 0;
+    // Cache size is given as an integer representing the number of bytes that the cache can hold.
+    // Cache lines is given as an integer representing the number of cache lines in the cache.
+    // Associtivity is given as an integer representing the number of cache lines pre set.
+    int line_size = cache_size / cache_lines;
+    int sets = cache_lines / associativity;
 
     // Print out some parameter info
     printf("Parameter Info\n");
