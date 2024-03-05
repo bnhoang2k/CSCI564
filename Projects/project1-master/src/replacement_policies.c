@@ -22,12 +22,9 @@
 
 struct lru_node {
     uint32_t tag;
-    uint32_t counter;
     struct lru_node *next;
     struct lru_node *prev;
 };
-
-uint32_t i = 0;
 
 void print_data(struct lru_node **list, uint32_t sets) {
     int i = 0;
@@ -47,14 +44,27 @@ uint32_t lru_eviction_index(struct replacement_policy *replacement_policy,
 {
     // TODO return the index within the set that should be evicted.
     // We want to remove the last element in the linked list
-    struct lru_node **set_heads = (struct lru_node **)replacement_policy->data;
-    struct lru_node *set_head = set_heads[set_idx];
+
+    uint32_t set_start = set_idx * cache_system->associativity;
     uint32_t eviction_index = 0;
 
-    while (set_head->next != NULL) {
-        set_head = set_head->next;
-        eviction_index++;
+    // Pointer to the head of the linked list
+    struct lru_node **set_heads = (struct lru_node **)replacement_policy->data;
+    struct lru_node *current = set_heads[set_idx], *prev = NULL;
+    while (current && current->next != NULL) {
+        prev = current;
+        current = current->next;
     }
+
+    for (int i = 0; i < cache_system->associativity; i++) {
+        if (cache_system->cache_lines[set_start + i].tag == current->tag) {
+            eviction_index = i;
+            break;
+        }
+    }
+
+    if (prev) {prev->next = NULL;}
+    free(current);
 
     return eviction_index;
 }
@@ -87,7 +97,7 @@ void lru_cache_access(struct replacement_policy *replacement_policy, struct cach
     // Three scenarios emerge: the tag is the head, the tag is the tail, or the tag is in the middle
     if (tag_found) {
         if (current == set_head) {return;}
-        if (current->next == NULL) {
+        else if (current->next == NULL) {
             prev->next = NULL;
             current->next = set_head;
             current->prev = NULL;
@@ -135,13 +145,11 @@ struct replacement_policy *lru_replacement_policy_new(uint32_t sets, uint32_t as
     // Create an array of structs to store the linked list for each set
     // However, the array has to be a double pointer to be able to store the head of the linked lists.
     struct lru_node **lru_lists = calloc(sets, sizeof(struct lru_node*));
-    i = 0;
     for (int i = 0; i < sets; i++) {
         struct lru_node *head = malloc(sizeof(struct lru_node));
         head->tag = 0;
         head->next = NULL;
         head->prev = NULL;
-        head->counter = 0;
         lru_lists[i] = head;
     }
     lru_rp->data = lru_lists;
