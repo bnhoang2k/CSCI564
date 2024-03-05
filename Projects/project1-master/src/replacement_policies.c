@@ -65,14 +65,29 @@ void lru_cache_access(struct replacement_policy *replacement_policy,
         if (tag_found) {
             struct lru_node *current = set_head;
             while (current->next != NULL) {
-                if ((current->tag == tag) && (current != set_head)) {
-                    // Move the tag to the front of the linked list
-                    current->prev = current->next;
-                    current->next = current->prev;
-                    current->next = set_head;
-                    current->prev = NULL;
-                    set_head->prev = current;
-                    set_head = current;
+                if (current->tag == tag) {
+                    // In here, we'll have to account for the scenarios where the current node is either a) the head, b) the tail, or c) in the middle
+                    // Scenario A: The current node is the head
+                    if (current == set_head) {return;}
+                    // Scenario B: The current node is the tail
+                    else if (current->next == NULL) {
+                        current->prev->next = NULL;
+                        current->prev = NULL;
+                        current->next = set_head;
+                        set_head->prev = current;
+                        set_head = current;
+                        break;
+                    }
+                    // Scenario C: The current node is in the middle
+                    else {
+                        current->prev->next = current->next;
+                        current->next->prev = current->prev;
+                        current->prev = NULL;
+                        current->next = set_head;
+                        set_head->prev = current;
+                        set_head = current;
+                        break;
+                    } 
                 }
                 current = current->next;
             }
@@ -86,7 +101,6 @@ void lru_cache_access(struct replacement_policy *replacement_policy,
             set_head->prev = new_node;
             set_head = new_node;
         }
-
     }
 }
 
