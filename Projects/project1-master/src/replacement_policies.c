@@ -19,18 +19,10 @@
 // ============================================================================
 // TODO feel free to create additional structs/enums as necessary
 
-struct lru_cache_line {
-    uint32_t tag;
-    uint32_t lru_counter;
-};
-
 uint32_t lru_eviction_index(struct replacement_policy *replacement_policy,
                             struct cache_system *cache_system, uint32_t set_idx)
 {
     // TODO return the index within the set that should be evicted.
-    
-    
-
     return 0;
 }
 
@@ -38,13 +30,14 @@ void lru_cache_access(struct replacement_policy *replacement_policy,
                       struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
 {
     // TODO update the LRU replacement policy state given a new memory access
-
+    
 }
 
 void lru_replacement_policy_cleanup(struct replacement_policy *replacement_policy)
 {
     // TODO cleanup any additional memory that you allocated in the
     // lru_replacement_policy_new function.
+    free(replacement_policy->data);
 }
 
 struct replacement_policy *lru_replacement_policy_new(uint32_t sets, uint32_t associativity)
@@ -57,8 +50,6 @@ struct replacement_policy *lru_replacement_policy_new(uint32_t sets, uint32_t as
     // TODO allocate any additional memory to store metadata here and assign to
     // lru_rp->data.
 
-
-
     return lru_rp;
 }
 
@@ -69,20 +60,15 @@ uint32_t rand_eviction_index(struct replacement_policy *replacement_policy,
                              struct cache_system *cache_system, uint32_t set_idx)
 {
     // TODO return the index within the set that should be evicted.
-    return 0;
+    return rand() % cache_system->associativity;
 }
 
 void rand_cache_access(struct replacement_policy *replacement_policy,
                        struct cache_system *cache_system, uint32_t set_idx, uint32_t tag)
-{
-    // TODO update the RAND replacement policy state given a new memory access
-}
+{}
 
 void rand_replacement_policy_cleanup(struct replacement_policy *replacement_policy)
-{
-    // TODO cleanup any additional memory that you allocated in the
-    // rand_replacement_policy_new function.
-}
+{}
 
 struct replacement_policy *rand_replacement_policy_new(uint32_t sets, uint32_t associativity)
 {
@@ -93,9 +79,6 @@ struct replacement_policy *rand_replacement_policy_new(uint32_t sets, uint32_t a
     rand_rp->cache_access = &rand_cache_access;
     rand_rp->eviction_index = &rand_eviction_index;
     rand_rp->cleanup = &rand_replacement_policy_cleanup;
-
-    // TODO allocate any additional memory to store metadata here and assign to
-    // rand_rp->data.
 
     return rand_rp;
 }
