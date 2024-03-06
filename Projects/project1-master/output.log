@@ -1,25 +1,523 @@
 Parameter Info
 ==============
 Replacement Policy: LRU_PREFER_CLEAN
-Cache Size: 8
-Cache Lines: 8
-Associativity: 2
-Line Size: 1B
-Number of Sets: 4
+Cache Size: 32768
+Cache Lines: 2048
+Associativity: 4
+Line Size: 16B
+Number of Sets: 512
 
 Cache System Geometry:
-Index bits: 2
-Offset bits: 0
-Tag bits: 30
-Offset mask: 0xffffffff
-Set index mask: 0x3
-read at 0x10000
-  0x10000 miss
-  store cache line with tag 0x4000 in set 0 index 0
-read at 0x20000
-  0x20000 miss
-  store cache line with tag 0x8000 in set 0 index 1
-write at 0x30000
-  0x30000 miss
-  cache line 0: tag 0x4000, status 1
-  cache line 1: tag 0x8000, status 1
+Index bits: 9
+Offset bits: 4
+Tag bits: 19
+Offset mask: 0xf
+Set index mask: 0x1fff
+read at 0x7fc6f68
+  0x7fc6f68 miss
+  store cache line with tag 0x3fe3 in set 246 index 0
+write at 0x15ccb040
+  0x15ccb040 miss
+  store cache line with tag 0xae65 in set 260 index 0
+read at 0x560e9fd8
+  0x560e9fd8 miss
+  store cache line with tag 0x2b074 in set 509 index 0
+write at 0x15ccb028
+  0x15ccb028 miss
+  store cache line with tag 0xae65 in set 258 index 0
+read at 0x560ea020
+  0x560ea020 miss
+  store cache line with tag 0x2b075 in set 2 index 0
+write at 0x15ccb020
+  0x15ccb020 hit: set 258, tag 0xae65, offset 0
+read at 0x560ea008
+  0x560ea008 miss
+  store cache line with tag 0x2b075 in set 0 index 0
+write at 0x15ccb018
+  0x15ccb018 miss
+  store cache line with tag 0xae65 in set 257 index 0
+read at 0x560ea010
+  0x560ea010 miss
+  store cache line with tag 0x2b075 in set 1 index 0
+write at 0x15ccb010
+  0x15ccb010 hit: set 257, tag 0xae65, offset 0
+read at 0x1c9ae6a8
+  0x1c9ae6a8 miss
+  store cache line with tag 0xe4d7 in set 106 index 0
+write at 0x15ccac80
+  0x15ccac80 miss
+  store cache line with tag 0xae65 in set 200 index 0
+write at 0x15ccac88
+  0x15ccac88 hit: set 200, tag 0xae65, offset 8
+write at 0x15ccac90
+  0x15ccac90 miss
+  store cache line with tag 0xae65 in set 201 index 0
+write at 0x15ccac98
+  0x15ccac98 hit: set 201, tag 0xae65, offset 8
+write at 0x15ccaca0
+  0x15ccaca0 miss
+  store cache line with tag 0xae65 in set 202 index 0
+write at 0x15ccaca8
+  0x15ccaca8 hit: set 202, tag 0xae65, offset 8
+write at 0x15ccacb0
+  0x15ccacb0 miss
+  store cache line with tag 0xae65 in set 203 index 0
+write at 0x15ccaec0
+  0x15ccaec0 miss
+  store cache line with tag 0xae65 in set 236 index 0
+write at 0x15ccaec8
+  0x15ccaec8 hit: set 236, tag 0xae65, offset 8
+write at 0x15ccaed0
+  0x15ccaed0 miss
+  store cache line with tag 0xae65 in set 237 index 0
+write at 0x15ccaed8
+  0x15ccaed8 hit: set 237, tag 0xae65, offset 8
+write at 0x15ccaee0
+  0x15ccaee0 miss
+  store cache line with tag 0xae65 in set 238 index 0
+write at 0x15ccaee8
+  0x15ccaee8 hit: set 238, tag 0xae65, offset 8
+write at 0x15ccaef0
+  0x15ccaef0 miss
+  store cache line with tag 0xae65 in set 239 index 0
+write at 0x15ccaef8
+  0x15ccaef8 hit: set 239, tag 0xae65, offset 8
+read at 0x15ccacc0
+  0x15ccacc0 miss
+  store cache line with tag 0xae65 in set 204 index 0
+write at 0x15ccacc0
+  0x15ccacc0 hit: set 204, tag 0xae65, offset 0
+read at 0x15ccb020
+  0x15ccb020 hit: set 258, tag 0xae65, offset 0
+read at 0x15ccb018
+  0x15ccb018 hit: set 257, tag 0xae65, offset 8
+write at 0x15ccac78
+  0x15ccac78 miss
+  store cache line with tag 0xae65 in set 199 index 0
+write at 0x15ccac70
+  0x15ccac70 hit: set 199, tag 0xae65, offset 0
+read at 0x1c9b0188
+  0x1c9b0188 miss
+  store cache line with tag 0xe4d8 in set 24 index 0
+read at 0x560e9e70
+  0x560e9e70 miss
+  store cache line with tag 0x2b074 in set 487 index 0
+read at 0x1c9b0218
+  0x1c9b0218 miss
+  store cache line with tag 0xe4d8 in set 33 index 0
+read at 0x560e9ef0
+  0x560e9ef0 miss
+  store cache line with tag 0x2b074 in set 495 index 0
+read at 0x1c9b0190
+  0x1c9b0190 miss
+  store cache line with tag 0xe4d8 in set 25 index 0
+read at 0x560e6750
+  0x560e6750 miss
+  store cache line with tag 0x2b073 in set 117 index 0
+read at 0x560e6748
+  0x560e6748 miss
+  store cache line with tag 0x2b073 in set 116 index 0
+read at 0x560e9e80
+  0x560e9e80 miss
+  store cache line with tag 0x2b074 in set 488 index 0
+read at 0x1c9b0120
+  0x1c9b0120 miss
+  store cache line with tag 0xe4d8 in set 18 index 0
+write at 0x15ccac68
+  0x15ccac68 miss
+  store cache line with tag 0xae65 in set 198 index 0
+read at 0x560e639d
+  0x560e639d miss
+  store cache line with tag 0x2b073 in set 57 index 0
+read at 0x1c9b02f0
+  0x1c9b02f0 miss
+  store cache line with tag 0xe4d8 in set 47 index 0
+read at 0x560e9f60
+  0x560e9f60 miss
+  store cache line with tag 0x2b074 in set 502 index 0
+read at 0x560e65b2
+  0x560e65b2 miss
+  store cache line with tag 0x2b073 in set 91 index 0
+read at 0x1c9b0408
+  0x1c9b0408 miss
+  store cache line with tag 0xe4d8 in set 64 index 0
+read at 0x852a560
+  0x852a560 miss
+  store cache line with tag 0x4295 in set 86 index 0
+read at 0x7fc6f58
+  0x7fc6f58 miss
+  store cache line with tag 0x3fe3 in set 245 index 0
+read at 0x560e6398
+  0x560e6398 hit: set 57, tag 0x2b073, offset 8
+read at 0x1c9b04b0
+  0x1c9b04b0 miss
+  store cache line with tag 0xe4d8 in set 75 index 0
+write at 0x15ccac58
+  0x15ccac58 miss
+  store cache line with tag 0xae65 in set 197 index 0
+write at 0x15ccac50
+  0x15ccac50 hit: set 197, tag 0xae65, offset 0
+write at 0x15ccac48
+  0x15ccac48 miss
+  store cache line with tag 0xae65 in set 196 index 0
+write at 0x15ccac40
+  0x15ccac40 hit: set 196, tag 0xae65, offset 0
+write at 0x15ccac38
+  0x15ccac38 miss
+  store cache line with tag 0xae65 in set 195 index 0
+write at 0x15ccac30
+  0x15ccac30 hit: set 195, tag 0xae65, offset 0
+write at 0x15ccac28
+  0x15ccac28 miss
+  store cache line with tag 0xae65 in set 194 index 0
+write at 0x15ccac20
+  0x15ccac20 hit: set 194, tag 0xae65, offset 0
+write at 0x15ccac18
+  0x15ccac18 miss
+  store cache line with tag 0xae65 in set 193 index 0
+read at 0x560e64c5
+  0x560e64c5 miss
+  store cache line with tag 0x2b073 in set 76 index 0
+write at 0x15ccab90
+  0x15ccab90 miss
+  store cache line with tag 0xae65 in set 185 index 0
+write at 0x15ccab98
+  0x15ccab98 hit: set 185, tag 0xae65, offset 8
+write at 0x15ccab88
+  0x15ccab88 miss
+  store cache line with tag 0xae65 in set 184 index 0
+write at 0x15ccabb8
+  0x15ccabb8 miss
+  store cache line with tag 0xae65 in set 187 index 0
+read at 0x560e64c6
+  0x560e64c6 hit: set 76, tag 0x2b073, offset 6
+read at 0x560e64c7
+  0x560e64c7 hit: set 76, tag 0x2b073, offset 7
+read at 0x560e64c8
+  0x560e64c8 hit: set 76, tag 0x2b073, offset 8
+read at 0x560e64c9
+  0x560e64c9 hit: set 76, tag 0x2b073, offset 9
+read at 0x560e64ca
+  0x560e64ca hit: set 76, tag 0x2b073, offset 10
+read at 0x560e64cb
+  0x560e64cb hit: set 76, tag 0x2b073, offset 11
+read at 0x560e64cc
+  0x560e64cc hit: set 76, tag 0x2b073, offset 12
+read at 0x560e64cd
+  0x560e64cd hit: set 76, tag 0x2b073, offset 13
+read at 0x560e64ce
+  0x560e64ce hit: set 76, tag 0x2b073, offset 14
+read at 0x560e64cf
+  0x560e64cf hit: set 76, tag 0x2b073, offset 15
+read at 0x560e64d0
+  0x560e64d0 miss
+  store cache line with tag 0x2b073 in set 77 index 0
+read at 0x560e64d1
+  0x560e64d1 hit: set 77, tag 0x2b073, offset 1
+read at 0x560e64d2
+  0x560e64d2 hit: set 77, tag 0x2b073, offset 2
+read at 0x560e64d3
+  0x560e64d3 hit: set 77, tag 0x2b073, offset 3
+read at 0x560e64d4
+  0x560e64d4 hit: set 77, tag 0x2b073, offset 4
+read at 0x560e64d5
+  0x560e64d5 hit: set 77, tag 0x2b073, offset 5
+read at 0x560e64d6
+  0x560e64d6 hit: set 77, tag 0x2b073, offset 6
+read at 0x560e64d7
+  0x560e64d7 hit: set 77, tag 0x2b073, offset 7
+read at 0x560e64d8
+  0x560e64d8 hit: set 77, tag 0x2b073, offset 8
+read at 0x560e64d9
+  0x560e64d9 hit: set 77, tag 0x2b073, offset 9
+read at 0x560e64da
+  0x560e64da hit: set 77, tag 0x2b073, offset 10
+read at 0x560e64db
+  0x560e64db hit: set 77, tag 0x2b073, offset 11
+read at 0x560e64dc
+  0x560e64dc hit: set 77, tag 0x2b073, offset 12
+read at 0x560e64dd
+  0x560e64dd hit: set 77, tag 0x2b073, offset 13
+read at 0x560e64de
+  0x560e64de hit: set 77, tag 0x2b073, offset 14
+read at 0x560e64df
+  0x560e64df hit: set 77, tag 0x2b073, offset 15
+read at 0x560e64e0
+  0x560e64e0 miss
+  store cache line with tag 0x2b073 in set 78 index 0
+read at 0x1c9af970
+  0x1c9af970 miss
+  store cache line with tag 0xe4d7 in set 407 index 0
+write at 0x1c9af970
+  0x1c9af970 hit: set 407, tag 0xe4d7, offset 0
+read at 0x15ccab88
+  0x15ccab88 hit: set 184, tag 0xae65, offset 8
+write at 0x15ccabc0
+  0x15ccabc0 miss
+  store cache line with tag 0xae65 in set 188 index 0
+write at 0x15ccabd0
+  0x15ccabd0 miss
+  store cache line with tag 0xae65 in set 189 index 0
+write at 0x15ccabd8
+  0x15ccabd8 hit: set 189, tag 0xae65, offset 8
+read at 0x15ccac50
+  0x15ccac50 hit: set 197, tag 0xae65, offset 0
+read at 0x15ccab98
+  0x15ccab98 hit: set 185, tag 0xae65, offset 8
+read at 0x15ccac68
+  0x15ccac68 hit: set 198, tag 0xae65, offset 8
+read at 0x15ccac58
+  0x15ccac58 hit: set 197, tag 0xae65, offset 8
+read at 0x1c9b0488
+  0x1c9b0488 miss
+  store cache line with tag 0xe4d8 in set 72 index 0
+write at 0x15ccaba0
+  0x15ccaba0 miss
+  store cache line with tag 0xae65 in set 186 index 0
+read at 0x15ccaba0
+  0x15ccaba0 hit: set 186, tag 0xae65, offset 0
+read at 0x15ccab98
+  0x15ccab98 hit: set 185, tag 0xae65, offset 8
+read at 0x15ccab90
+  0x15ccab90 hit: set 185, tag 0xae65, offset 0
+write at 0x15ccab78
+  0x15ccab78 miss
+  store cache line with tag 0xae65 in set 183 index 0
+read at 0x15ccabb8
+  0x15ccabb8 hit: set 187, tag 0xae65, offset 8
+write at 0x15ccab70
+  0x15ccab70 hit: set 183, tag 0xae65, offset 0
+read at 0x15ccac58
+  0x15ccac58 hit: set 197, tag 0xae65, offset 8
+write at 0x15ccab68
+  0x15ccab68 miss
+  store cache line with tag 0xae65 in set 182 index 0
+read at 0x15ccac50
+  0x15ccac50 hit: set 197, tag 0xae65, offset 0
+write at 0x15ccab60
+  0x15ccab60 hit: set 182, tag 0xae65, offset 0
+read at 0x15ccab88
+  0x15ccab88 hit: set 184, tag 0xae65, offset 8
+write at 0x15ccab58
+  0x15ccab58 miss
+  store cache line with tag 0xae65 in set 181 index 0
+write at 0x15ccab50
+  0x15ccab50 hit: set 181, tag 0xae65, offset 0
+write at 0x15ccab48
+  0x15ccab48 miss
+  store cache line with tag 0xae65 in set 180 index 0
+write at 0x15ccab40
+  0x15ccab40 hit: set 180, tag 0xae65, offset 0
+write at 0x15ccab38
+  0x15ccab38 miss
+  store cache line with tag 0xae65 in set 179 index 0
+write at 0x15ccab30
+  0x15ccab30 hit: set 179, tag 0xae65, offset 0
+write at 0x15ccab28
+  0x15ccab28 miss
+  store cache line with tag 0xae65 in set 178 index 0
+write at 0x15ccab20
+  0x15ccab20 hit: set 178, tag 0xae65, offset 0
+write at 0x15ccab18
+  0x15ccab18 miss
+  store cache line with tag 0xae65 in set 177 index 0
+read at 0x1c9b03e8
+  0x1c9b03e8 miss
+  store cache line with tag 0xe4d8 in set 62 index 0
+write at 0x15ccaad8
+  0x15ccaad8 miss
+  store cache line with tag 0xae65 in set 173 index 0
+read at 0x15ccab50
+  0x15ccab50 hit: set 181, tag 0xae65, offset 0
+write at 0x15ccaab0
+  0x15ccaab0 miss
+  store cache line with tag 0xae65 in set 171 index 0
+read at 0x15ccab68
+  0x15ccab68 hit: set 182, tag 0xae65, offset 8
+write at 0x15ccaae8
+  0x15ccaae8 miss
+  store cache line with tag 0xae65 in set 174 index 0
+read at 0x15ccab70
+  0x15ccab70 hit: set 183, tag 0xae65, offset 0
+write at 0x15ccaae0
+  0x15ccaae0 hit: set 174, tag 0xae65, offset 0
+write at 0x15ccaab8
+  0x15ccaab8 hit: set 171, tag 0xae65, offset 8
+read at 0x1c9b03e0
+  0x1c9b03e0 hit: set 62, tag 0xe4d8, offset 0
+write at 0x15ccaac0
+  0x15ccaac0 miss
+  store cache line with tag 0xae65 in set 172 index 0
+read at 0x852a4d8
+  0x852a4d8 miss
+  store cache line with tag 0x4295 in set 77 index 1
+read at 0x1c9b0148
+  0x1c9b0148 miss
+  store cache line with tag 0xe4d8 in set 20 index 0
+write at 0x15ccaa98
+  0x15ccaa98 miss
+  store cache line with tag 0xae65 in set 169 index 0
+read at 0x1c9b043d
+  0x1c9b043d miss
+  store cache line with tag 0xe4d8 in set 67 index 0
+read at 0x1c9ae5c0
+  0x1c9ae5c0 miss
+  store cache line with tag 0xe4d7 in set 92 index 0
+read at 0x1c9b0414
+  0x1c9b0414 miss
+  store cache line with tag 0xe4d8 in set 65 index 0
+read at 0x1c9b0190
+  0x1c9b0190 hit: set 25, tag 0xe4d8, offset 0
+write at 0x15ccab04
+  0x15ccab04 miss
+  store cache line with tag 0xae65 in set 176 index 0
+write at 0x15ccab08
+  0x15ccab08 hit: set 176, tag 0xae65, offset 8
+read at 0x560e9e80
+  0x560e9e80 hit: set 488, tag 0x2b074, offset 0
+write at 0x15ccaaa8
+  0x15ccaaa8 miss
+  store cache line with tag 0xae65 in set 170 index 0
+read at 0x1c9b0188
+  0x1c9b0188 hit: set 24, tag 0xe4d8, offset 8
+read at 0x560e9e70
+  0x560e9e70 hit: set 487, tag 0x2b074, offset 0
+write at 0x15ccaaa0
+  0x15ccaaa0 hit: set 170, tag 0xae65, offset 0
+read at 0x1c9b0420
+  0x1c9b0420 miss
+  store cache line with tag 0xe4d8 in set 66 index 0
+read at 0x15ccaab8
+  0x15ccaab8 hit: set 171, tag 0xae65, offset 8
+read at 0x1c9b041c
+  0x1c9b041c hit: set 65, tag 0xe4d8, offset 12
+read at 0x15ccaac0
+  0x15ccaac0 hit: set 172, tag 0xae65, offset 0
+read at 0x1c9b0418
+  0x1c9b0418 hit: set 65, tag 0xe4d8, offset 8
+read at 0x560e6340
+  0x560e6340 miss
+  store cache line with tag 0x2b073 in set 52 index 0
+read at 0x852a4e0
+  0x852a4e0 miss
+  store cache line with tag 0x4295 in set 78 index 1
+read at 0x8529028
+  0x8529028 miss
+  store cache line with tag 0x4294 in set 258 index 1
+write at 0x15ccaa98
+  0x15ccaa98 hit: set 169, tag 0xae65, offset 8
+read at 0x852931d
+  0x852931d miss
+  store cache line with tag 0x4294 in set 305 index 0
+read at 0x1c9ae5c0
+  0x1c9ae5c0 hit: set 92, tag 0xe4d7, offset 0
+read at 0x85292f4
+  0x85292f4 miss
+  store cache line with tag 0x4294 in set 303 index 0
+read at 0x8529070
+  0x8529070 miss
+  store cache line with tag 0x4294 in set 263 index 0
+write at 0x15ccab04
+  0x15ccab04 hit: set 176, tag 0xae65, offset 4
+write at 0x15ccab08
+  0x15ccab08 hit: set 176, tag 0xae65, offset 8
+read at 0x84dfe80
+  0x84dfe80 miss
+  store cache line with tag 0x426f in set 488 index 1
+write at 0x15ccaaa8
+  0x15ccaaa8 hit: set 170, tag 0xae65, offset 8
+read at 0x8529068
+  0x8529068 miss
+  store cache line with tag 0x4294 in set 262 index 0
+read at 0x84dfe70
+  0x84dfe70 miss
+  store cache line with tag 0x426f in set 487 index 1
+write at 0x15ccaaa0
+  0x15ccaaa0 hit: set 170, tag 0xae65, offset 0
+read at 0x8529300
+  0x8529300 miss
+  store cache line with tag 0x4294 in set 304 index 0
+read at 0x15ccaab8
+  0x15ccaab8 hit: set 171, tag 0xae65, offset 8
+read at 0x85292fc
+  0x85292fc hit: set 303, tag 0x4294, offset 12
+read at 0x15ccaac0
+  0x15ccaac0 hit: set 172, tag 0xae65, offset 0
+read at 0x85292f8
+  0x85292f8 hit: set 303, tag 0x4294, offset 8
+read at 0x82feca0
+  0x82feca0 miss
+  store cache line with tag 0x417f in set 202 index 1
+read at 0x8529308
+  0x8529308 hit: set 304, tag 0x4294, offset 8
+read at 0x82ff68c
+  0x82ff68c miss
+  store cache line with tag 0x417f in set 360 index 0
+read at 0x8529310
+  0x8529310 hit: set 305, tag 0x4294, offset 0
+write at 0x15ccaad0
+  0x15ccaad0 hit: set 173, tag 0xae65, offset 0
+write at 0x15ccab50
+  0x15ccab50 hit: set 181, tag 0xae65, offset 0
+read at 0x15ccaae0
+  0x15ccaae0 hit: set 174, tag 0xae65, offset 0
+write at 0x15ccaaf0
+  0x15ccaaf0 miss
+  store cache line with tag 0xae65 in set 175 index 0
+write at 0x15ccab68
+  0x15ccab68 hit: set 182, tag 0xae65, offset 8
+read at 0x15ccab58
+  0x15ccab58 hit: set 181, tag 0xae65, offset 8
+write at 0x15ccaac8
+  0x15ccaac8 hit: set 172, tag 0xae65, offset 8
+read at 0x8301d18
+  0x8301d18 miss
+  store cache line with tag 0x4180 in set 465 index 0
+read at 0x8529310
+  0x8529310 hit: set 305, tag 0x4294, offset 0
+read at 0x15ccaac8
+  0x15ccaac8 hit: set 172, tag 0xae65, offset 8
+write at 0x15ccaa80
+  0x15ccaa80 miss
+  store cache line with tag 0xae65 in set 168 index 0
+write at 0x15ccaa78
+  0x15ccaa78 miss
+  store cache line with tag 0xae65 in set 167 index 0
+write at 0x15ccaa70
+  0x15ccaa70 hit: set 167, tag 0xae65, offset 0
+read at 0x15ccaaa0
+  0x15ccaaa0 hit: set 170, tag 0xae65, offset 0
+write at 0x15ccaa68
+  0x15ccaa68 miss
+  store cache line with tag 0xae65 in set 166 index 0
+write at 0x15ccaa60
+  0x15ccaa60 hit: set 166, tag 0xae65, offset 0
+read at 0x15ccaaa8
+  0x15ccaaa8 hit: set 170, tag 0xae65, offset 8
+read at 0x15ccab60
+  0x15ccab60 hit: set 182, tag 0xae65, offset 0
+read at 0x15ccaab0
+  0x15ccaab0 hit: set 171, tag 0xae65, offset 0
+write at 0x15ccaa58
+  0x15ccaa58 miss
+  store cache line with tag 0xae65 in set 165 index 0
+write at 0x15ccaa50
+  0x15ccaa50 hit: set 165, tag 0xae65, offset 0
+write at 0x15ccaa48
+  0x15ccaa48 miss
+  store cache line with tag 0xae65 in set 164 index 0
+read at 0x830ba2e
+  0x830ba2e miss
+  store cache line with tag 0x4185 in set 418 index 0
+write at 0x15ccaa40
+  0x15ccaa40 hit: set 164, tag 0xae65, offset 0
+write at 0x15ccaa38
+  0x15ccaa38 miss
+  store cache line with tag 0xae65 in set 163 index 0
+read at 0x830ba2c
+  0x830ba2c hit: set 418, tag 0x4185, offset 12
+write at 0x15ccaa30
+  0x15ccaa30 hit: set 163, tag 0xae65, offset 0
+read at 0x15ccaa70
+  0x15ccaa70 hit: set 167, tag 0xae65, offset 0
+re
