@@ -19,20 +19,7 @@ read at 0x10000
 read at 0x20000
   0x20000 miss
   store cache line with tag 0x8000 in set 0 index 1
-Exclusive head: 0x4000
-Linked List:  {0x4000 | EXCLUSIVE} 
-bruh
-Linked List:  {0x4000 | EXCLUSIVE} 
 write at 0x30000
   0x30000 miss
   cache line 0: tag 0x4000, status 1
-  cache line 1: tag 0x8000, status 1
-  evict clean cache line from set 0 index 0
-  store cache line with tag 0xc000 in set 0 index 0
-Exclusive head: 0x4000
-Linked List:  {0x4000 | EXCLUSIVE} 
-Linked List:  {0xc000 | MODIFIED}  {0x4000 | EXCLUSIVE} 
-read at 0x10004
-  0x10004 miss
-  cache line 0: tag 0xc000, status 2
   cache line 1: tag 0x8000, status 1

@@ -232,24 +232,44 @@ uint32_t lru_prefer_clean_eviction_index(struct replacement_policy *replacement_
 {
     // TODO return the index within the set that should be evicted.
     struct lruc_data *data = (struct lruc_data *)replacement_policy->data;
-    struct lruc_node *head = data->head_set[set_idx], *tail_node = NULL;
+    struct lruc_node *head = data->head_set[set_idx], *eviction_node = NULL, *temp = head;
     uint32_t set_start = set_idx * cache_system->associativity;
     uint32_t eviction_index = -1;
 
-    // Find the tail node
-    for (tail_node = head; tail_node->next != NULL; tail_node = tail_node->next);
-
-    // We always evict the tail node, due to the way our linked list is structured
-    // [MRU MODIFIED ----- LRU MODIFIED][MRU EXCLUSIVE -----LRU EXLUSIVE]
-    for (int i = 0; i < cache_system->associativity; i++) {
-        if (cache_system->cache_lines[set_start + i].tag == tail_node->tag) {
-            eviction_index = i;
-            break;
-        }
-    }
-    
-    if (tail_node->prev) {tail_node->prev->next = NULL;}
-    free(tail_node);
+    // Recall, linked listed is structured like so: 
+    // [MRU MODIFIED --- LRU MODIFIED][LRU EXCLUSIVE --- MRU EXCLUSIVE]
+    // while (temp) {
+    //     if (temp->status == EXCLUSIVE) {
+    //         eviction_node = temp;
+    //         break;
+    //     }
+    //     temp = temp->next;
+    // }
+    // What gets evicted changes based on the eviction_node's status
+    // if (eviction_node) {
+    //     for (int i = 0; i < cache_system->associativity; i++) {
+    //         if (cache_system->cache_lines[set_start + i].tag == eviction_node->tag) {
+    //             eviction_index = i;
+    //             break;
+    //         }
+    //     }
+    //     if (eviction_node->prev) {eviction_node->prev->next = eviction_node->next;}
+    //     if (eviction_node->next) {eviction_node->next->prev = eviction_node->prev;}
+    //     free(eviction_node);
+    // }
+    // else {
+    //     temp = head;
+    //     while (temp->next) {temp = temp->next;}
+    //     eviction_node = temp;
+    //     for (int i = 0; i < cache_system->associativity; i++) {
+    //         if (cache_system->cache_lines[set_start + i].tag == eviction_node->tag) {
+    //             eviction_index = i;
+    //             break;
+    //         }
+    //     }
+    //     if (eviction_node->next) {eviction_node->next->prev = NULL;}
+    //     free(eviction_node);
+    // }
 
     return eviction_index;
 }
@@ -287,34 +307,21 @@ void lru_prefer_clean_cache_access(struct replacement_policy *replacement_policy
         current_node = current_node->next;
     }
 
-    // Cache is split into two sections: [modified][exclusive]
-    // Next we must find the head for the exclusive section
-    struct lruc_node *exclusive_head = NULL, *temp = head;
-    temp = head;
+    // Find the exclusive "tail"
+    struct lruc_node *exclusive_tail = NULL, *temp = head;
     while (temp) {
         if (temp->status == EXCLUSIVE) {
-            exclusive_head = temp;
+            exclusive_tail = temp;
             break;
         }
         temp = temp->next;
     }
-    if (exclusive_head) {printf("Exclusive head: 0x%x\n", exclusive_head->tag);}
-    else {printf("Exclusive head: NULL\n");}
-    print_ll(data->head_set[set_idx]);
 
+    // Cache will be split as follows: [MRU MODIFIED ----- LRU MODIFIED][LRU EXCLUSIVE ----- MRU EXLUSIVE]
     if (tag_found) {
-        // This is status of the cache line in the linked list, not the cache line in the cache_system
-        enum cache_status status = current_node->status;
+        enum cache_status status = cl->status;
         if (status == MODIFIED) {
             if (current_node == head) {return;}
-            else if (current_node->next == exclusive_head) {
-                current_node->prev->next = exclusive_head;
-                exclusive_head->prev = current_node->prev;
-                current_node->prev = NULL;
-                current_node->next = head;
-                head->prev = current_node;
-                data->head_set[set_idx] = current_node;
-            }
             else {
                 current_node->prev->next = current_node->next;
                 current_node->next->prev = current_node->prev;
@@ -324,60 +331,48 @@ void lru_prefer_clean_cache_access(struct replacement_policy *replacement_policy
                 data->head_set[set_idx] = current_node;
             }
         }
-        else if (status == EXCLUSIVE) {
-            if (current_node == exclusive_head) {return;}
+        else {
+            if (current_node == exclusive_tail) {return;}
             else if (current_node->next == NULL) {
                 current_node->prev->next = NULL;
-                current_node->prev = NULL;
-                current_node->next = exclusive_head;
-                exclusive_head->prev = current_node;
-                data->head_set[set_idx] = current_node;
+                current_node->prev = exclusive_tail->prev;
+                current_node->next = exclusive_tail;
+                exclusive_tail->prev->next = current_node;
+                exclusive_tail->prev = current_node;
+                exclusive_tail = current_node;
             }
             else {
-                current_node->prev->next = current_node->next;
-                current_node->next->prev = current_node->prev;
-                current_node->prev = exclusive_head->prev;
-                current_node->next = exclusive_head;
-                exclusive_head->prev = current_node;
-                data->head_set[set_idx] = current_node;
+                if (current_node->prev) current_node->prev->next = current_node->next;
+                if (current_node->next) current_node->next->prev = current_node->prev;
+                current_node->prev = exclusive_tail->prev;
+                current_node->next = exclusive_tail;
+                if (current_node->prev) exclusive_tail->prev->next = current_node;
+                exclusive_tail->prev = current_node;
+                exclusive_tail = current_node;
             }
         }
     }
     else {
-        // If the tag is not found, we'll have to add it to the head of the linked list
         struct lruc_node *new_node = calloc(1, sizeof(struct lruc_node));
         new_node->tag = tag;
         new_node->status = cl->status;
-        if (cl->status == MODIFIED) {
+        // New modified cache lines are added to the front of the linked list
+        if (new_node->status == MODIFIED) {
             new_node->next = head;
             new_node->prev = NULL;
             head->prev = new_node;
             data->head_set[set_idx] = new_node;
         }
+        // New exclusive cache lines are added to the tail of the linked list
         else {
-            if (exclusive_head) {
-                printf("bruh\n");
-                new_node->next = exclusive_head;
-                new_node->prev = exclusive_head->prev;
-                exclusive_head->prev = new_node;
-                exclusive_head->prev->next = new_node;
-                exclusive_head = new_node;
-            }
-            else {
-                if (head) {
-                    new_node->next = NULL;
-                    new_node->prev = head;
-                    head->next = new_node;
-                    head = new_node;
-                }
-                else {
-                    new_node->next = NULL;
-                    new_node->prev = NULL;
-                }
-            }
+            temp = head;
+            while (temp->next) {temp = temp->next;}
+            new_node->next = NULL;
+            new_node->prev = temp;
+            temp->next = new_node;
         }
     }
-    print_ll(data->head_set[set_idx]);
+
 }
 
 void lru_prefer_clean_replacement_policy_cleanup(struct replacement_policy *replacement_policy)
