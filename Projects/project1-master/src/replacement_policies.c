@@ -237,19 +237,17 @@ uint32_t lru_prefer_clean_eviction_index(struct replacement_policy *replacement_
 
     // Recall, linked listed is structured like so: 
     // [MRU MODIFIED --- LRU MODIFIED][LRU EXCLUSIVE --- MRU EXCLUSIVE]
+    bool exl_detected = false;
     while (temp) {
         if (temp->status == EXCLUSIVE) {
             eviction_node = temp;
+            exl_detected = true;
             break;
         }
         temp = temp->next;
     }
 
-    // printf("Eviction Node: 0x%x | %s\n", eviction_node->tag, get_enum_name(eviction_node->status));
-    // printf("Linked List Before Eviction: \n");
-    // print_ll(data->head_set[set_idx], set_idx);
-
-    if (eviction_node) {
+    if (exl_detected) {
         for (int i = 0; i < cache_system->associativity; i++) {
             if (cache_system->cache_lines[set_start + i].tag == eviction_node->tag) {
                 eviction_index = i;
@@ -261,9 +259,9 @@ uint32_t lru_prefer_clean_eviction_index(struct replacement_policy *replacement_
         free(eviction_node);
     }
     else {
-        temp = head;
-        while (temp->next) {temp = temp->next;}
-        eviction_node = temp;
+        for (eviction_node = head; 
+         eviction_node->next != NULL; 
+         eviction_node = eviction_node->next);
         for (int i = 0; i < cache_system->associativity; i++) {
             if (cache_system->cache_lines[set_start + i].tag == eviction_node->tag) {
                 eviction_index = i;
@@ -273,10 +271,6 @@ uint32_t lru_prefer_clean_eviction_index(struct replacement_policy *replacement_
         if (eviction_node->prev) {eviction_node->prev->next = NULL;}
         free(eviction_node);
     }
-
-    // printf("Linked List After Eviction: \n");
-    // print_ll(data->head_set[set_idx], set_idx);
-
 
     return eviction_index;
 }
@@ -293,7 +287,7 @@ void lru_prefer_clean_cache_access(struct replacement_policy *replacement_policy
     struct cache_line *cl = cache_system_find_cache_line(cache_system, set_idx, tag);
 
     // Code for when the set is empty
-    if (head->tag == -1 || !head) {
+    if (head->tag == -1) {
         head->tag = tag;
         head->status = cl->status;
         head->next = NULL;
