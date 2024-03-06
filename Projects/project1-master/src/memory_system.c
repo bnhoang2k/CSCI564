@@ -4,7 +4,6 @@
 //
 
 #include "memory_system.h"
-#include "math.h"
 
 struct cache_system *cache_system_new(uint32_t line_size, uint32_t sets, uint32_t associativity)
 {
@@ -16,7 +15,6 @@ struct cache_system *cache_system_new(uint32_t line_size, uint32_t sets, uint32_
     cs->stats = stats;
 
     // TODO: calculate the index bits, offset bits and tag bits.
-    // Lecture 4: Slides 30-31
     cs->index_bits = log2(sets);
     cs->offset_bits = log2(line_size);
     cs->tag_bits = 32 -  (cs->index_bits + cs->offset_bits);
@@ -74,6 +72,11 @@ int cache_system_mem_access(struct cache_system *cache_system, uint32_t address,
         }
 
         if (insert_index < 0) {
+            
+            for(int i = 0; start + i < start + cache_system->associativity; i++) {
+                printf("  cache line %d: tag 0x%x, status %d\n", i, (start + i)->tag, (start + i)->status);
+            } 
+
             // An eviction is necessary. Call the replacement policy's eviction
             // index function.
             int evicted_index = (*cache_system->replacement_policy->eviction_index)(

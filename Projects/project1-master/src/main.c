@@ -28,9 +28,6 @@ int main(int argc, char **argv)
     size_t associativity = strtol(argv[4], &endptr, 10);
 
     // TODO: calculate the line size and number of sets.
-    // Cache size is given as an integer representing the number of bytes that the cache can hold.
-    // Cache lines is given as an integer representing the number of cache lines in the cache.
-    // Associtivity is given as an integer representing the number of cache lines pre set.
     int line_size = cache_size / cache_lines;
     int sets = cache_lines / associativity;
 
@@ -84,8 +81,6 @@ int main(int argc, char **argv)
     printf("OUTPUT DIRTY EVICTIONS %d\n", cache_system->stats.dirty_evictions);
     printf("OUTPUT HIT RATIO %.8f\n",
            (double)cache_system->stats.hits / cache_system->stats.accesses);
-
-    // print_data(replacement_policy->data, sets);
 
     // Clean everything up.
     cache_system_cleanup(cache_system);
