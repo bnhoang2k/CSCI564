@@ -253,11 +253,6 @@ uint32_t lru_prefer_clean_eviction_index(struct replacement_policy *replacement_
         }
     }
 
-    printf("\n=====================================\n");
-    printf("Eviction Info: Tag: 0x%x | Status: %s\n", eviction_node->tag, get_enum_name(eviction_node->status));
-    printf("Before Eviction\n");
-    print_ll(head, set_idx);
-
     if (eviction_node->status == MODIFIED) {
         if (eviction_node->prev) {eviction_node->prev->next = NULL;}
         free(eviction_node);
@@ -273,9 +268,6 @@ uint32_t lru_prefer_clean_eviction_index(struct replacement_policy *replacement_
         }
         free(eviction_node);
     }
-    printf("After Eviction\n");
-    print_ll(data->head_set[set_idx], set_idx);
-    printf("=====================================\n\n");
     
     return eviction_index;
 
@@ -300,7 +292,7 @@ void lru_prefer_clean_cache_access(struct replacement_policy *replacement_policy
         new_node->next = NULL;
         new_node->prev = NULL;
         data->head_set[set_idx] = new_node;
-        print_ll(data->head_set[set_idx], set_idx);
+        // print_ll(data->head_set[set_idx], set_idx);
         return;
     }
 
@@ -337,7 +329,17 @@ void lru_prefer_clean_cache_access(struct replacement_policy *replacement_policy
             }
         }
         else if (current_node->status == EXCLUSIVE) {
-            if (current_node == head || current_node == tail) {return;}
+            if (current_node == head) {
+                if (current_node->next) {
+                    data->head_set[set_idx] = current_node->next;
+                    current_node->next->prev = NULL;
+                    current_node->prev = tail;
+                    current_node->next = NULL;
+                    tail->next = current_node;
+                }
+                else {return;}
+            }
+            else if (current_node == tail) {return;}
             else {   
                 if (current_node->prev) current_node->prev->next = current_node->next;
                 if (current_node->next) current_node->next->prev = current_node->prev;
@@ -366,7 +368,7 @@ void lru_prefer_clean_cache_access(struct replacement_policy *replacement_policy
             tail->next = new_node;
         }
     }
-    print_ll(head, set_idx);
+    // print_ll(head, set_idx);
 }
 
 void lru_prefer_clean_replacement_policy_cleanup(struct replacement_policy *replacement_policy)
