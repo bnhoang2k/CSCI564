@@ -287,11 +287,13 @@ void lru_prefer_clean_cache_access(struct replacement_policy *replacement_policy
     struct cache_line *cl = cache_system_find_cache_line(cache_system, set_idx, tag);
 
     // Code for when the set is empty
-    if (head->tag == -1) {
-        head->tag = tag;
-        head->status = cl->status;
-        head->next = NULL;
-        head->prev = NULL;
+    if (!head) {
+        struct lruc_node *new_node = calloc(1, sizeof(struct lruc_node));
+        new_node->tag = tag;
+        new_node->status = cl->status;
+        new_node->next = NULL;
+        new_node->prev = NULL;
+        data->head_set[set_idx] = new_node;
         return;
     }
 
@@ -400,16 +402,8 @@ struct replacement_policy *lru_prefer_clean_replacement_policy_new(uint32_t sets
 
     // TODO allocate any additional memory to store metadata here and assign to
     // lru_prefer_clean_rp->data.
-    struct lruc_node **lru_prefer_clean_lists = calloc(sets, sizeof(struct lruc_node*));
-    for (int i = 0; i < sets; i++) {
-        struct lruc_node *head = calloc(1, sizeof(struct lruc_node));
-        head->tag = -1;
-        head->status = INVALID;
-        head->next = NULL;
-        head->prev = NULL;
-        lru_prefer_clean_lists[i] = head;
-    }
     struct lruc_data *data = calloc(1, sizeof(struct lruc_data));
+    struct lruc_node **lru_prefer_clean_lists = calloc(sets, sizeof(struct lruc_node*));
     data->head_set = lru_prefer_clean_lists;
     data->num_sets = sets;
     lru_prefer_clean_rp->data = data;
