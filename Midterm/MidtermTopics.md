@@ -32,8 +32,8 @@ Pipeline [x]
 -- Superscalar pipelines [x]
 
 Branch prediction []
--- Branch target buffer (BTB) []
--- Static branch prediction []
--- Dynamic branch prediction (1-bit, 2-bit predictors) []
+-- Branch target buffer (BTB) [x]
+-- Static branch prediction [x]
+-- Dynamic branch prediction (1-bit, 2-bit predictors) [x]
 -- Global branch prediction []
   
