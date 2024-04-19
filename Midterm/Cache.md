@@ -89,9 +89,9 @@ The figure above plots single processor performance projections against the hist
 
 The bulk of this chapter describes more advanced innovations that attack the processor-memory performance gap.
 
-When a word is not found within the cache, the word must be fetched from a lower level in the hierarchy (which may be anothe rcache or the main memory) and placed into the cache before continuing. Multiple words, called a *block* or *line*, are moved at the same time for efficiency reasons since they are likely to be needed due to spatial locality. Each *cache block* includes a *tag* to indicate which memory address it corresponds to.
+When a word is not found within the cache, the word must be fetched from a lower level in the hierarchy (which may be another cache or the main memory) and placed into the cache before continuing. Multiple words, called a *block* or *line*, are moved at the same time for efficiency reasons since they are likely to be needed due to spatial locality. Each *cache block* includes a *tag* to indicate which memory address it corresponds to.
 
-A key design decision is where *blocks* can be placed within a cache. The most popular scheme is **set associative**, where a *set* is a group of blocks ina cache.
+A key design decision is where *blocks* can be placed within a cache. The most popular scheme is **set associative**, where a *set* is a group of blocks in a cache.
 
 Blocks are first mapped onto a set, then the block can be placed anywhere within that set. Finding a block consists of first mapping the block address to the set, then searching the set (usually in parallel) to find the block. The set is chosen by the address of the data:
 
@@ -99,7 +99,7 @@ $$\text{Block address} \% (\text{Number of sets in a cache})$$
 
 If there are *n* blocks within a set, the cache placement is called *n-way set associative.* The endpoints of set associativity also have their own names (direct-mapped and fully associative). The former is when there's only one block per set, and the latter is when there's only one set. Direct mappped caches must always be placed in the same location, while fully associative caches can be placed anywhere.
 
-Caching data that is only read is easy because the copy in the cache nad memory is identical, but what if we want to write? The copy in the cache and memory must be consistent with one another. There are two main strategies for handling writes:
+Caching data that is only read is easy because the copy in the cache and memory is identical, but what if we want to write? The copy in the cache and memory must be consistent with one another. There are two main strategies for handling writes:
 
 - A write-through cache updates the item in the cache and writes through to update to main memory. No write-backs are required on eviction which is a bonus.
   This leads to higher bandwidth usage because every write operation results ina memory write, regardless of how often that data is accessed. However, no writebacks are required on eviction.

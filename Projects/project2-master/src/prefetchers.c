@@ -32,13 +32,19 @@ uint32_t sequential_handle_mem_access(struct prefetcher *prefetcher,
                                       bool is_miss)
 {
     // TODO: Return the number of lines that were prefetched.
-    return 0;
+    if (*(uint32_t*)prefetcher->data == 0) {return 0;}
+    for (uint32_t i = 1; i <= *(uint32_t*)prefetcher->data; i++) {
+        uint32_t next_address = address + (cache_system->line_size * i);
+        cache_system_mem_access(cache_system, next_address, 'R', true);
+    }
+    return *(uint32_t*)prefetcher->data;
 }
 
 void sequential_cleanup(struct prefetcher *prefetcher)
 {
     // TODO cleanup any additional memory that you allocated in the
     // sequential_prefetcher_new function.
+    free(prefetcher->data);
 }
 
 struct prefetcher *sequential_prefetcher_new(uint32_t prefetch_amount)
@@ -49,7 +55,11 @@ struct prefetcher *sequential_prefetcher_new(uint32_t prefetch_amount)
 
     // TODO allocate any additional memory needed to store metadata here and
     // assign to sequential_prefetcher->data.
-
+    
+    // Store prefetch amount in data
+    uint32_t *data = malloc(sizeof(uint32_t));
+    *data = prefetch_amount;
+    sequential_prefetcher->data = data;
     return sequential_prefetcher;
 }
 
@@ -60,26 +70,21 @@ uint32_t adjacent_handle_mem_access(struct prefetcher *prefetcher,
                                     bool is_miss)
 {
     // TODO perform the necessary prefetches for the adjacent strategy.
-
     // TODO: Return the number of lines that were prefetched.
-    return 0;
+    // For the adjacent prefetcher, whenever a cache line is accessed, the next
+    // cache line should be prefetched.
+    uint32_t next_address = address + cache_system->line_size;
+    cache_system_mem_access(cache_system, next_address, 'R', true);
+    return 1;
 }
 
-void adjacent_cleanup(struct prefetcher *prefetcher)
-{
-    // TODO cleanup any additional memory that you allocated in the
-    // adjacent_prefetcher_new function.
-}
+void adjacent_cleanup(struct prefetcher *prefetcher) {}
 
 struct prefetcher *adjacent_prefetcher_new()
 {
     struct prefetcher *adjacent_prefetcher = calloc(1, sizeof(struct prefetcher));
     adjacent_prefetcher->handle_mem_access = &adjacent_handle_mem_access;
     adjacent_prefetcher->cleanup = &adjacent_cleanup;
-
-    // TODO allocate any additional memory needed to store metadata here and
-    // assign to adjacent_prefetcher->data.
-
     return adjacent_prefetcher;
 }
 
