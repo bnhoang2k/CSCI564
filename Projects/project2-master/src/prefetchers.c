@@ -90,12 +90,86 @@ struct prefetcher *adjacent_prefetcher_new()
 
 // Custom Prefetcher
 // ============================================================================
-uint32_t custom_handle_mem_access(struct prefetcher *prefetcher, struct cache_system *cache_system,
-                                  uint32_t address, bool is_miss)
-{
-    // TODO perform the necessary prefetches for your custom strategy.
 
-    // TODO: Return the number of lines that were prefetched.
+#define EVICTED_CACHE_SIZE 64
+
+struct evicted_ll {
+    struct node *head;
+    struct node *tail;
+    uint32_t size;
+};
+
+struct node {
+    uint32_t address;
+    struct node *next;
+    struct node *prev;
+};
+
+uint32_t get_ll_size(struct evicted_ll *evicted_ll) {
+    uint32_t size = 0;
+    struct node *current = evicted_ll->head;
+    while (current != NULL) {
+        size++;
+        current = current->next;
+    }
+    return size;
+}
+
+uint32_t custom_handle_mem_access(struct prefetcher *prefetcher, struct cache_system *cache_system,
+                                  uint32_t address, bool is_miss) {
+    
+    if (!is_miss) return 0; // Only prefetch on misses
+
+    struct evicted_ll *evicted_ll = prefetcher->data;
+    struct node *current = evicted_ll->head;
+    struct node *previous = NULL;
+
+    while (current != NULL) {
+        if (current->address == address) {
+            if (current != evicted_ll->head) {
+                // Remove current from its position
+                if (current->next) current->next->prev = current->prev;
+                if (current->prev) current->prev->next = current->next;
+                if (current == evicted_ll->tail) evicted_ll->tail = current->prev;
+
+                // Move current to the front
+                current->next = evicted_ll->head;
+                current->prev = NULL;
+                evicted_ll->head->prev = current;
+                evicted_ll->head = current;
+            }
+            // Perform prefetch for the current address
+            cache_system_mem_access(cache_system, current->address, 'R', true);
+            return 1;
+        }
+        previous = current;
+        current = current->next;
+    }
+
+    // Address not found, create new node at the front
+    struct node *new_node = malloc(sizeof(struct node));
+    new_node->address = address;
+    new_node->next = evicted_ll->head;
+    new_node->prev = NULL;
+    if (evicted_ll->head) {
+        evicted_ll->head->prev = new_node;
+    }
+    evicted_ll->head = new_node;
+    if (evicted_ll->tail == NULL) {
+        evicted_ll->tail = new_node;
+    }
+
+    if (++evicted_ll->size > EVICTED_CACHE_SIZE) {
+        // Remove last node
+        struct node *last = evicted_ll->tail;
+        if (last->prev) {
+            evicted_ll->tail = last->prev;
+            evicted_ll->tail->next = NULL;
+        }
+        free(last);
+        evicted_ll->size--;
+    }
+
     return 0;
 }
 
@@ -103,6 +177,14 @@ void custom_cleanup(struct prefetcher *prefetcher)
 {
     // TODO cleanup any additional memory that you allocated in the
     // custom_prefetcher_new function.
+    struct evicted_ll *evicted_ll = prefetcher->data;
+    struct node *current = evicted_ll->head;
+    while (current != NULL) {
+        struct node *next = current->next;
+        free(current);
+        current = next;
+    }
+    free(evicted_ll);
 }
 
 struct prefetcher *custom_prefetcher_new()
@@ -113,6 +195,11 @@ struct prefetcher *custom_prefetcher_new()
 
     // TODO allocate any additional memory needed to store metadata here and
     // assign to custom_prefetcher->data.
+    struct evicted_ll *evicted_ll = malloc(sizeof(struct evicted_ll));
+    evicted_ll->head = NULL;
+    evicted_ll->tail = NULL;
+    evicted_ll->size = EVICTED_CACHE_SIZE;
+    custom_prefetcher->data = evicted_ll;
 
     return custom_prefetcher;
 }
