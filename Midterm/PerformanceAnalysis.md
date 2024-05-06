@@ -19,7 +19,7 @@ $$\text{Speed} = \frac{1}{\text{Latency}}$$
 
 One thing to note however, "performance", usually but not always, means latency.
 
-All CPUs have some form of latency, which is the delay before a transfer or operation begins following an instruction. However, we're generally focused on the latency of the application acting on a specific CPU. In this context, application latencyc is influenced by various factors beyond the CPU's basic operation latency, such as application ode efficiency, the interaction with other system copmonents like memory and storage, network, and task complexity.
+All CPUs have some form of latency, which is the delay before a transfer or operation begins following an instruction. However, we're generally focused on the latency of the application acting on a specific CPU. In this context, application latency is influenced by various factors beyond the CPU's basic operation latency, such as application code efficiency, the interaction with other system components like memory and storage, network, and task complexity.
 
 Latency is critical for many applications, especially those that require real-time processing, such as video streaming, gaming, and financial trading. For example, a high-frequency trading application may require a latency of less than 1 millisecond to be competitive.
 
@@ -101,7 +101,7 @@ Good models will give insights into the system they model. For example, from thi
 
 - Reduce the number of instructions executed (IC).
   
-  The instruction count in the performance equation si the *dynamic* instruction count. Dynamic has to do with the execution of the program or counted at run time. This accounts for the fact that some instructions are executed more than once. For example, a loop that executes 100 times will have a dynamic instruction count of 100 times the number of instructions in the loop. The dynamic instruction count is the number of instructions executed by the program, not the number of instructions in the program.
+  The instruction count in the performance equation is the *dynamic* instruction count. Dynamic has to do with the execution of the program or counted at run time. This accounts for the fact that some instructions are executed more than once. For example, a loop that executes 100 times will have a dynamic instruction count of 100 times the number of instructions in the loop. The dynamic instruction count is the number of instructions executed by the program, not the number of instructions in the program.
 
   Static instruction count is the number of instructions at compile. This is the number of instructions in the program, not the number of instructions executed by the program.
 
@@ -124,13 +124,13 @@ Good models will give insights into the system they model. For example, from thi
 
   Different inputs will make programs behave differently since they can execute different functions; their branches will go in different directions; these are all things that can affect the instruction mix and IC.
 
-- Reduce the cycle time (CT). Cycle time is a function of the processor's design. If the design does less work during a clock cycle, it's cycle time will be shorter. Recall that one cycle of a clock in terms of computer architecture is the time perioud in which the processor can execute one instruction. This includes fetching an instruction, decoding it, executing it, and writing back the results.
+- Reduce the cycle time (CT). Cycle time is a function of the processor's design. If the design does less work during a clock cycle, it's cycle time will be shorter. Recall that one cycle of a clock in terms of computer architecture is the time period in which the processor can execute one instruction. This includes fetching an instruction, decoding it, executing it, and writing back the results.
   
   If processors are designed to do less work (fewer tasks or simpler operations) during a clock cycle, it can operate at a higher clock speed, meaning shorter cycle times. For example, processors that only perform addition and subtraction can potentially have a shorter cycle time than one that can also perform multiplcation and division.
 
   Additionally, it's also a function of process technology. If we scale a fixed design to a more advanced process technology, the cycle time will be shorter. Clock rates on the other hand are a function of the processor's design.
 
-It also allows us to evaluate potential trade-offs. For example, by reducing the cycle time by $50%$, and increasing $CPI$ by two gives us a net win.
+It also allows us to evaluate potential trade-offs. For example, by reducing the cycle time by $50%$, and increasing $\text{CPI}$ by two gives us a net win.
 
 #### Clock Speed Corollary
 
@@ -154,7 +154,6 @@ Often, we'll compare system that're partly the same. E.g., two CPUs running the 
 
 Optimizations do not (generally) uniformally affect the entire program. The more widely applicable a technique is, the more valuable it is. Conversely, limited applicability can reduce the impact of an optimization.
 
-'
 In the slides, they use the example "SuperJPEG-O-Rama2010 ISA extensions" to illustrate this point. According to the slides JOR-2K speeds up jpeg decoding by 10x, however increases processor costs by 45%.
 
 Take the fictitious program PictoBench. Pictobench spends about a third of it's time doing jpeg decode. Meaning for a 30s program, 10s is spent on jpeg decode.
@@ -163,7 +162,7 @@ Take the fictitious program PictoBench. Pictobench spends about a third of it's 
 
 $$\text{Speedup} = \frac{30}{21} = 1.42x$$
 
-The speedup is only $1.42x$, not $10x$. This is because the speedup is limited by the fraction of the program that can be sped up. This is Amdahl's Law. Is this speedup wirth the $45%$ increase in cost?
+The speedup is only $1.42x$, not $10x$. This is because the speedup is limited by the fraction of the program that can be sped up. This is Amdahl's Law. Is this speedup worth the $45%$ increase in processor cost?
 
 Let's use the metric *latency * cost*:
 

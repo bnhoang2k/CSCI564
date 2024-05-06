@@ -67,19 +67,19 @@ Not all memory is created equally. Although many programmers desire unlimited am
 - Temporal locality is the idea that if a memory location is referenced, it will tend to be referenced again soon. Think of a loop; the same memory locations are accessed over and over again.
 - Spatial locality is the idea that if a memory location is referenced, nearby memory locations will tend to be referenced soon. Think of an array; if you access one element, you'll likely access the next element soon after.
 
-This principle plus the guideline that for a given implementation technology and power budge, smaller hardware can be made faster led to hierarchies based on memory of different speeds and sizes.
+This principle plus the guideline that for a given implementation technology and power budget, smaller hardware can be made faster led to hierarchies based on memory of different speeds and sizes.
 
 ![memory 1](./Cache/image-2.png)
 
-The figure above shows several different multilevel memory hierarchies. As Flash and next-gen memory technologies continue to close the gap with disks in cost per bit, such technologies are likely to increasinly replace magnetic disks for secondary storage.
+The figure above shows several different multilevel memory hierarchies. As Flash and next-gen memory technologies continue to close the gap with disks in cost per bit, such technologies are likely to replace magnetic disks for secondary storage.
 
-Recall that fast memory is expensive; therefore memory hierarchies are organized into several levels with each being smaller, faster, and mor eexpensive per byte than the next lower level. The lower the level, the farther away from the processor it is.
+Recall that fast memory is expensive; therefore memory hierarchies are organized into several levels with each being smaller, faster, and more expensive per byte than the next lower level. The lower the level, the farther away from the processor it is.
 
-**The goal is to provide a memory system with aq cost per byte that's almost as low as the cheapest level of memory and a speed almost as fast as the fastest level.**
+**The goal is to provide a memory system with a cost per byte that's almost as low as the cheapest level of memory and a speed almost as fast as the fastest level.**
 
 In most cases (but not all), the data contained in a lower level are a superset of the next higher level. For example, the L2 cache will have a copy of all the data in the L1 cache, and the main memory will have a copy of all the data in the L2 cache. This property, called the *inclusion property*, is always required for the lowest level of the hierarchy.
 
-The importance of the MH has incrased with advanced in performances of processors.
+The importance of the MH has increased with advanced in performances of processors.
 
 ![processor vs memory](./Cache/image-3.png)
 
@@ -106,7 +106,7 @@ Caching data that is only read is easy because the copy in the cache and memory 
 
 - Write-back caches only update the copy in the cache. When a block is about to be replaced, it is copied back to memory. Fewer writes down the hierarchy and less bandwidth (meaning more things can be done). However, write-backs are required on eviction.
 
-Both strategies can use a write buffer to allow the cache to procceed as soon as the data re placed in the buffer rather than wait for full latency to write the data in memory.
+Both strategies can use a write buffer to allow the cache to proceed as soon as the data replaced in the buffer rather than wait for full latency to write the data in memory.
 
 One measure of the benefits of different cache organizations is the *miss rate*. *Miss rate* is simply the fraction of cache accesses that result in a miss divided by the number of accesses. Cache misses are the accesses that result in a miss, and cache hits are the accesses that result in a hit. **To explain more simply, cache misses occur when the processor goes to look for data in the cache and doesn't find it there.**
 
@@ -252,7 +252,7 @@ How big should cache lines be? How big or how small?
 Why would we have different caches for instructions and data? The main reason is that instructions and data have different access patterns.
 
 - Instrunction caches have a lot of spatial locality. Instructions are executed sequentially, so the next instruction is likely to be nearby.
-  Additionally, instruction caches are also more predictable to the extent that branches are predicatable.
+  Additionally, instruction caches are also more predictable to the extent that branches are predictable.
   Data cache caccesses are typically less predictable.
 
 ## Lecture 5: Advanced Cache

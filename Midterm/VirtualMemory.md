@@ -88,13 +88,13 @@ The pros and cons of paged vs. segmented vm are:
 
 ![vm 6](./VirtualMemory/image-5.png)
 
-The data structure, containing the physical page addresses, usually takes the form of a **page table**. Indexed by the virtual page number, the size of the table is the number of pages in the virtual address space. Given a 32-bit virtual address, 4 KiB pages, and 4 bytes per page table entry (PTE), the size of the page table would be $\frac{2^32}{2^12} \times 2^2 = 2^22$ or 4 MiB.
+The data structure, containing the physical page addresses, usually takes the form of a **page table**. Indexed by the virtual page number, the size of the table is the number of pages in the virtual address space. Given a 32-bit virtual address, 4 KiB pages, and 4 bytes per page table entry (PTE), the size of the page table would be $\frac{2^{32}}{2^{12}} \times 2^2 = 2^{22}$ or 4 MiB.
 
 To reduce the size of this data structure, some computers apply a hashing function to the VA. The hash allows the data structure to be the length of the number of physical pages in main memory. This number could be much smaller than the number of virtual pages. These structures are called *inverted page tables.*
 
 #### Which block should be replaced on a VM miss?
 
-The overriding OS guideline is to minimize page faults. Almost all OS try to replace the LRU block because if the past predicts the future, that's one less likely to be needed. To help the OS estimate LRU, many processors provide a *use bit* or *reference bit*, which is logically set whenever a page is accessed. The OS periodically clears the use bits and later records them so it determines which pages were touched during a particular time period.
+The overriding OS guideline is to minimize page faults. Almost all OS try to replicate the LRU block because if the past predicts the future, that's one less likely to be needed. To help the OS estimate LRU, many processors provide a *use bit* or *reference bit*, which is logically set whenever a page is accessed. The OS periodically clears the use bits and later records them so it determines which pages were touched during a particular time period.
 
 #### What happens on a Write?
 
@@ -106,7 +106,7 @@ Recall, write-back writes to the cache and only writes to main memory when the b
 
 For a 32-bit address space, that's:
 
-$$2^32 bits * \frac{1 KB}{1000 bits} * \frac{1 MB}{1 KB} * \frac{1 GB}{1000 MB} = 4 GiB \text{of virtual addresses}$$
+$$2^{32} \text{ bits} * \frac{1 \text{ KB}}{1000 \text{ bits}} * \frac{1 \text{ MB}}{1 \text{ KB}} * \frac{1 \text{GB}}{1000 \text{ MB}} = 4 \text{ GiB } \text{of virtual addresses}$$
 
 Given 1 million pages, with each entry being 4 bytes (32-bit addresses), that's about 4 MiB of map. For a 64-bit address space, it's even bigger!
 
@@ -122,7 +122,7 @@ How would we represent the sparse map?
 
 ### Storing the Map Compactly: Hierarchical Page Tables
 
-We could use a tree to hold the page table. We do this by breaking the virtual page number into several pieces. If each piece is *N* bits, we'd build a $2^N \text{-ary tree}$.
+We could use a tree to hold the page table. We do this by breaking the virtual page number into several pieces. If each piece is *N* bits, we'd build a $2^\text{N} \text{-ary tree}$.
 
 We only store the parts of the tree that contain valid pages. To do an address translation, we'd walk down the tree using pieces of the address to select which child to visit.
 
@@ -154,7 +154,7 @@ Alternatively, we could translate after the cache. Now translation is only requi
 
 ### Dangers of Virtual Cache
 
-Consider the following situation: Process A is running an issues a memory request to address $0x10000$. It's a miss and $0x10000$ is brought into the virtual cache.
+Consider the following situation: Process A is running and issues a memory request to address $0x10000$. It's a miss and $0x10000$ is brought into the virtual cache.
 
 A **context switch** occurs.
 
@@ -174,4 +174,4 @@ memcpy(A, B, 100000);
 
 ![copy](./VirtualMemory/image-12.png)
 
-Two virtual addrresses would then point to the same physical address. Adjusting the page table is much faster for large copies. The initial copy is free, and the OS will catch attempts to write to the copy and perform the actual copy lazily.
+Two virtual addresses would then point to the same physical address. Adjusting the page table is much faster for large copies. The initial copy is free, and the OS will catch attempts to write to the copy and perform the actual copy lazily.

@@ -116,8 +116,9 @@ To start, we have to determine what happens on every clock cycle of the processo
 
 The image above is a more detailed view of the pipeline. We can make several key observations:
 
-- First, we use separate instructions and data memories, which we would typically implement with separate instruction and data caches. The use of separate caches elimiates a conflict for a single memory that would arise between instruction fetch and data memory access.
+- First, we use separate instructions and data memories, which we would typically implement with separate instruction and data caches. The use of separate caches eliminates a conflict for a single memory that would arise between instruction fetch and data memory access.
 - Second, the register file is used in two stages: one for reading in ID and one for writing in WB. These uses are distinct, so we simply show the register file in two places. Hence, we need to perform two reads and one write every clock cycle.
+The two reads occur in the ID stage, when we're reading the operands. Lastly, the write occurs in the writeback stage.
 - Third, the figure above does not deal with the PC. To start a new instruction every clock, we must increment and store the PC every clock, and this must be done during the IF stage in preparation for the next branch.
 
 Although it's critical to ensure that instructions in the pipeline do not attempt to use the hardware resources at the same time, we must also ensure that instructions in different stages of the pipeline do not interfere with one another. This separation is done by introducing *pipeline registers* between successive stages of the pipeline; this ensures that at the end of a clock cycle all the results from a given stage are store in the register that is used as the input to the next stage on the next clock cycle.
@@ -142,11 +143,11 @@ Pipeline registers add setup time, which is the time that a register input must 
 
 There are situations, called *hazards*, that prevent the next instruction in the instruction stream from executing during its designated clock cycle. There are three classes of hazards:
 
-- Structural hazards: These arise from resource conflicts when the hardware cannot support all possible combinations of instructions simulataneously in overlapped execution.
+- Structural hazards: These arise from resource conflicts when the hardware cannot support all possible combinations of instructions simultaneously in overlapped execution.
   
   I.e., the same stage is needed by two different instructions at the same time. For example, if the ALU is needed by two different instructions at the same time, the pipeline will stall.
 
-  In modern processors, structural hazards occur primarily in special purpose functional units that are less ffrequently used (such as floating point divide or other complex long running instructions). These are not as frequent as the other two types of hazards.
+  In modern processors, structural hazards occur primarily in special purpose functional units that are less frequently used (such as floating point divide or other complex long running instructions). These are not as frequent as the other two types of hazards.
 
 - Data hazards: These arise when an instruction depend on the result of a previous instruction in a way that's exposed by the overlapping of instructions in the pipeline.
   
@@ -233,7 +234,7 @@ If instruction *i* is the taken branch, then the PC is usually not changed until
 
 The figure above shows the simplest method of dealing with branches is to redo the fetch of the instruction following a branch, once we detect the branch during ID (when instructions are decoded). The first IF cycle is essentially a stall, since it never performs useful work. You may have noticed that if a branch is untaken, then the repetition of the IF stage is unnecessary since the correct instruction was indeed fetched. Several schemes take advantage of this fact.
 
-One stall cycle for every branch yields about a 10 to 30 percent performance loss depending on the brnach frequency.
+One stall cycle for every branch yields about a 10 to 30 percent performance loss depending on the branch frequency.
 
 *Recall control hazards occur when we may need to calculate the next PC:*
 
